@@ -1,6 +1,7 @@
 package org.example;
 
 import java.sql.*;
+import java.text.DecimalFormat;
 
 /*
  - вывести инф.из ост.таблиц
@@ -14,24 +15,29 @@ public class Main {
     static String user = "root";
     static String password = "root";
     static Connection connection;
+    static Statement statement;
 
     static {
         try {
             connection = DriverManager.getConnection(url, user, password);
+            statement = connection.createStatement();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         getCourses();
     }
 
+
     public static void getCourses() {
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM courses")) {
+        try (ResultSet resultSet = statement.executeQuery("SELECT * FROM courses")) {
             System.out.printf("|%-3s|%-34s|%-10s|%-12s|%-78s|%-11s|%-15s|%-8s|%-15s|%n", "id", "courseName", "duration",
                     "type", "description", "teacher_id", "students_count", "price", "price_per_hour");
+            System.out.println("--------------------------------------------------------------------------------------" +
+                    "-------------------------------------------------------------------------------------------------" +
+                    "-------------");
 
             while (resultSet.next()) {
                 System.out.printf("|%-3s|%-34s|%-10s|%-12s|%-78s|%-11s|%-15s|%-8s|%-15s|%n",
@@ -40,6 +46,39 @@ public class Main {
                         resultSet.getString("description"), resultSet.getInt("teacher_id"),
                         resultSet.getInt("students_count"), resultSet.getInt("price"),
                         resultSet.getInt("price_per_hour"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getPurchaseList() {
+        try (ResultSet resultSet = statement.executeQuery("SELECT * FROM purchaseList")) {
+            System.out.printf("|%-30s|%-38s|%-10s|%-20s|%n", "Student name", "Course name", "Price",
+                    "Subscription date");
+            System.out.println("--------------------------------------------------------------------" +
+                    "-----------------------------------");
+
+            while (resultSet.next()) {
+                System.out.printf("|%-30s|%-38s|%-10d|%-20s|%n",
+                        resultSet.getString("student_name"), resultSet.getString("course_name"),
+                        resultSet.getInt("price"), resultSet.getString("subscription_date"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getStudents() {
+        try (ResultSet resultSet = statement.executeQuery("SELECT * FROM students")) {
+            System.out.printf("|%-5s|%-22s|%-4s|%-20s|%n", "id", "Student name", "Age",
+                    "Registration date");
+            System.out.println("--------------------------------------------------------");
+
+            while (resultSet.next()) {
+                System.out.printf("|%-5d|%-22s|%-4d|%-20s|%n",
+                        resultSet.getInt("id"), resultSet.getString("name"),
+                        resultSet.getInt("age"), resultSet.getString("registration_date"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
