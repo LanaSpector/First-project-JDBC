@@ -1,7 +1,6 @@
 package org.example;
 
 import java.sql.*;
-import java.text.DecimalFormat;
 
 /*
  - вывести инф.из ост.таблиц
@@ -27,7 +26,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        getSubscriptions();
+        getTeachers();
     }
 
 
@@ -61,8 +60,10 @@ public class Main {
 
             while (resultSet.next()) {
                 System.out.printf("|%-30s|%-38s|%-10d|%-20s|%n",
-                        resultSet.getString("student_name"), resultSet.getString("course_name"),
-                        resultSet.getInt("price"), resultSet.getString("subscription_date"));
+                        resultSet.getString("student_name"),
+                        resultSet.getString("course_name"),
+                        resultSet.getInt("price"),
+                        resultSet.getString("subscription_date"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -77,8 +78,10 @@ public class Main {
 
             while (resultSet.next()) {
                 System.out.printf("|%-5d|%-22s|%-4d|%-20s|%n",
-                        resultSet.getInt("id"), resultSet.getString("name"),
-                        resultSet.getInt("age"), resultSet.getString("registration_date"));
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("age"),
+                        resultSet.getString("registration_date"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -92,8 +95,26 @@ public class Main {
 
             while (resultSet.next()) {
                 System.out.printf("|%-15d|%-15d|%-20s|%n",
-                        resultSet.getInt("student_id"), resultSet.getInt("course_id"),
+                        resultSet.getInt("student_id"),
+                        resultSet.getInt("course_id"),
                         resultSet.getString("subscription_date"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getTeachers() {
+        try (ResultSet resultSet = statement.executeQuery("SELECT * FROM teachers")) {
+            System.out.printf("|%-5s|%-22s|%-15s|%-5s|%n", "id", "Name", "Salary", "Age");
+            System.out.println("----------------------------------------------------");
+
+            while (resultSet.next()) {
+                System.out.printf("|%-5d|%-22s|%-15d|%-5d|%n",
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("salary"),
+                        resultSet.getInt("age"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
