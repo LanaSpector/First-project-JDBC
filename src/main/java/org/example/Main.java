@@ -27,7 +27,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        getCourses();
+        getSubscriptions();
     }
 
 
@@ -79,6 +79,21 @@ public class Main {
                 System.out.printf("|%-5d|%-22s|%-4d|%-20s|%n",
                         resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getInt("age"), resultSet.getString("registration_date"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getSubscriptions() {
+        try (ResultSet resultSet = statement.executeQuery("SELECT * FROM subscriptions")) {
+            System.out.printf("|%-15s|%-15s|%-20s|%n", "Student id", "Course id", "Subscription date");
+            System.out.println("------------------------------------------------------");
+
+            while (resultSet.next()) {
+                System.out.printf("|%-15d|%-15d|%-20s|%n",
+                        resultSet.getInt("student_id"), resultSet.getInt("course_id"),
+                        resultSet.getString("subscription_date"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
